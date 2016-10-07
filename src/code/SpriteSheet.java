@@ -1,20 +1,32 @@
 package code;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class SpriteSheet {
+	
 	private BufferedImage Sprite_Sheet;
-	private BufferedImage img;
+	private int tileSize = 64;
+
 	
-	public SpriteSheet(BufferedImage ss){
-		this.Sprite_Sheet = ss;
+	public SpriteSheet(int tileSize){
+		this.tileSize = tileSize;
 	}
 	
-	public void grabImage(int col, int row, int width, int height){
-		img = Sprite_Sheet.getSubimage((row*64)-64,(col*64)-64,width,height);
-	}
+	public BufferedImage loadSprite(String path) {
+        try {
+        	Sprite_Sheet = ImageIO.read(new File(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Sprite_Sheet;
+    }
 	
-	public BufferedImage getImg(){
-		return img;
+	
+	public BufferedImage grabImage(int col, int row){
+		return Sprite_Sheet.getSubimage(col * tileSize, row * tileSize, tileSize, tileSize);
 	}
 }

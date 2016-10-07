@@ -2,42 +2,65 @@ package code;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class FootSoldier extends GameObject {
 	
 	Random r = new Random();
 	Handler handler;
-	SpriteSheet SpriteSheet;
-	SpriteSheet SpriteSheet2;
-	BufferedImageLoader image;
+	SpriteSheet spriteSheet;
 	
+	private int randomNumber = 0;
+	private int[] maxDmg = {75,75,100,150,250};
+	private int[] minDmg = {50,50,75,125,200};
 	
-	int randomNumber = 0;
-	int[] maxDmg = {75,75,100,150,250};
-	int[] minDmg = {50,50,75,125,200};
+	// Images for each animation
+	private BufferedImage[] walkImg = new BufferedImage[4];
+	private BufferedImage[] attackImg = new BufferedImage[5];
+	// These are animation states
+	private Animation walk;
+	private Animation attack;
+	// This is the actual animation
+	private Animation animation;
+	
 	
 	public FootSoldier (int x, int y,ID id, Handler handler) {
 		super(x,y,id);
 		this.handler = handler;
 		this.setHealth(500);
+		spriteSheet = new SpriteSheet(64);
 		
-		if(id == ID.EnemyFootSolder)
-			velX = -2;
-		else
+		if(id == ID.PlayerFootSolder){
+			spriteSheet.loadSprite("res/Soldier_Walk.png");
+			for(int i = 0; i < walkImg.length; i++){
+				walkImg[i] = spriteSheet.grabImage(i, 0);
+			}
+			spriteSheet.loadSprite("res/Soldier_Attack.png");
+			for(int i = 0; i < attackImg.length; i++){
+				attackImg[i] = spriteSheet.grabImage(i, 0);
+			}
 			velX = 2;
-		
-		image = new BufferedImageLoader();
-		SpriteSheet = new SpriteSheet(image.loadImage("res/Soldier_Walk.png"));
-		SpriteSheet.grabImage(1, 2, 64, 64);
-		SpriteSheet2 = new SpriteSheet(image.loadImage("res/ESoldier_Walk.png"));
-		SpriteSheet2.grabImage(1, 2, 64, 64);
+		}else{
+			spriteSheet.loadSprite("res/ESoldier_Walk.png");
+			for(int i = 0; i < walkImg.length; i++){
+				walkImg[i] = spriteSheet.grabImage(i, 0);
+			}
+			spriteSheet.loadSprite("res/ESoldier_Attack.png");
+			for(int i = 0; i < attackImg.length; i++){
+				attackImg[i] = spriteSheet.grabImage(i, 0);
+			}
+			velX = -2;
+		}
+		walk = new Animation(walkImg, 10);
+		attack = new Animation(attackImg, 10);
+		animation = walk;
 	}
 	
 	public void tick(){
 		x += velX;
 		y += velY;
-		
+		animation.tick();
 		//Delete Object When Out Screen
 		if(x<0||x>Game.WIDTH){
 			handler.removeObject(this);
@@ -53,9 +76,9 @@ public class FootSoldier extends GameObject {
 	
 	public void render(Graphics g){
 		if(this.getId() == ID.PlayerFootSolder){
-			g.drawImage(SpriteSheet.getImg(), (int)x, (int)y, null);		
+			g.drawImage(animation.getSprite(), x, y, null);		
 		} else if(this.getId() == ID.EnemyFootSolder){
-			g.drawImage(SpriteSheet2.getImg(), (int)x, (int)y, null);
+			g.drawImage(animation.getSprite(), x, y, null);
 		}
 		g.drawString("HP: " + this.getHealth(), this.getX(), (this.getY()-20));
 	}
