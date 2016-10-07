@@ -1,6 +1,5 @@
 package code;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.Random;
@@ -9,8 +8,8 @@ public class FootSoldier extends GameObject {
 	
 	Random r = new Random();
 	Handler handler;
-	Graphic graphic;
-	Graphic graphic2;
+	SpriteSheet SpriteSheet;
+	SpriteSheet SpriteSheet2;
 	BufferedImageLoader image;
 	
 	
@@ -29,10 +28,10 @@ public class FootSoldier extends GameObject {
 			velX = 2;
 		
 		image = new BufferedImageLoader();
-		graphic = new Graphic(image.loadImage("src/code/Soldier_Walk.png"));
-		graphic.grabImage(1, 3, 76, 87);
-		graphic2 = new Graphic(image.loadImage("src/code/ESoldier_Walk.png"));
-		graphic.grabImage(1, 2, 79, 79);
+		SpriteSheet = new SpriteSheet(image.loadImage("res/Soldier_Walk.png"));
+		SpriteSheet.grabImage(1, 2, 64, 64);
+		SpriteSheet2 = new SpriteSheet(image.loadImage("res/ESoldier_Walk.png"));
+		SpriteSheet2.grabImage(1, 2, 64, 64);
 	}
 	
 	public void tick(){
@@ -53,15 +52,11 @@ public class FootSoldier extends GameObject {
 	}
 	
 	public void render(Graphics g){
-		/*
 		if(this.getId() == ID.PlayerFootSolder){
-			g.drawImage(graphic.getImg(), (int)x, (int)y, null);		
+			g.drawImage(SpriteSheet.getImg(), (int)x, (int)y, null);		
 		} else if(this.getId() == ID.EnemyFootSolder){
-			g.drawImage(graphic2.getImg(), (int)x, (int)y, null);
+			g.drawImage(SpriteSheet2.getImg(), (int)x, (int)y, null);
 		}
-		*/
-		g.setColor(Color.green);
-		g.fillRect(x, y, 32, 64);
 		g.drawString("HP: " + this.getHealth(), this.getX(), (this.getY()-20));
 	}
 

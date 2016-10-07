@@ -2,16 +2,16 @@ package code;
 
 import java.awt.image.BufferedImage;
 
-public class Graphic {
+public class SpriteSheet {
 	private BufferedImage Sprite_Sheet;
 	private BufferedImage img;
 	
-	public Graphic(BufferedImage ss){
+	public SpriteSheet(BufferedImage ss){
 		this.Sprite_Sheet = ss;
 	}
 	
 	public void grabImage(int col, int row, int width, int height){
-		img = Sprite_Sheet.getSubimage((row*76)-76,(col*87)-87,width,height);
+		img = Sprite_Sheet.getSubimage((row*64)-64,(col*64)-64,width,height);
 	}
 	
 	public BufferedImage getImg(){

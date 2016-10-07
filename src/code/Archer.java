@@ -1,6 +1,5 @@
 package code;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.Random;
@@ -9,6 +8,9 @@ public class Archer extends GameObject {
 	
 	Random r = new Random();
 	Handler handler;
+	SpriteSheet SpriteSheet;
+	SpriteSheet SpriteSheet2;
+	BufferedImageLoader image;
 	
 	int randomNumber = 0;
 	int[] maxDmg = {75,75,100,150,250};
@@ -23,6 +25,12 @@ public class Archer extends GameObject {
 			velX = -2;
 		else
 			velX = 2;
+		
+		image = new BufferedImageLoader();
+		SpriteSheet = new SpriteSheet(image.loadImage("res/Archer_Walk.png"));
+		SpriteSheet.grabImage(1, 2, 64, 64);
+		SpriteSheet2 = new SpriteSheet(image.loadImage("res/Archer_Walk.png"));
+		SpriteSheet2.grabImage(1, 2, 64, 64);
 	}
 	
 	public void tick(){
@@ -43,8 +51,11 @@ public class Archer extends GameObject {
 	}
 	
 	public void render(Graphics g){
-		g.setColor(Color.RED);
-		g.fillRect(x, y, 32, 64);
+		if(this.getId() == ID.PlayerArcher){
+			g.drawImage(SpriteSheet.getImg(), (int)x, (int)y, null);		
+		} else if(this.getId() == ID.EnemyArcher){
+			g.drawImage(SpriteSheet2.getImg(), (int)x, (int)y, null);
+		}
 		g.drawString("HP: " + this.getHealth(), this.getX(), (this.getY()-20));
 	}
 
