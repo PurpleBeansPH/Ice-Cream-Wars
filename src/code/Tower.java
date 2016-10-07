@@ -5,16 +5,21 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 public class Tower extends GameObject {
+	
+	Handler handler;
 
-	public Tower(int x, int y,ID id) {
+	public Tower(int x, int y,ID id,Handler handler) {
 		super(x,y,id);
+		this.handler = handler;
 		this.setHealth(10000);
 		velX = 0;
 	}
 	
 	public void tick(){
-		x += velX;
-		y += velY;
+		//Delete Object When Zero Health Screen
+		//if(health <= 0){
+		//	handler.removeObject(this);
+		//}
 	}
 	
 	public void render(Graphics g){

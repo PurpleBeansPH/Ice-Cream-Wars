@@ -65,6 +65,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() - r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
+						this.setVelX(2);
 					}
 				} else if(tempObject.getId() == ID.EnemyArcher) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -74,6 +75,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() - r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
+						this.setVelX(2);
 					}
 				} else if(tempObject.getId() == ID.EnemyMage) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -83,6 +85,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() - r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
+						this.setVelX(2);
 					}
 				} else if(tempObject.getId() == ID.EnemyBerserker) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -92,6 +95,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() - r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
+						this.setVelX(2);
 					}
 				} else if(tempObject.getId() == ID.EnemyDragonSlayer) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -101,9 +105,14 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() - r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
+						this.setVelX(2);
 					}
 				} else if(tempObject.getId() == ID.EnemyTower) {
-					
+					if(getBounds().intersects(tempObject.getBounds())) {
+						randomNumber = r.nextInt((this.maxDmg[3] - this.minDmg[3]) +1) + this.minDmg[3];
+						tempObject.setHealth(tempObject.getHealth() - randomNumber);
+						this.setVelX(0);
+					}
 				}
 			} else if(this.getId() == ID.EnemyBerserker) {
 				if(tempObject.getId() == ID.PlayerFootSolder) {
@@ -114,6 +123,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() + r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
+						this.setVelX(-2);
 					}
 				} else if(tempObject.getId() == ID.PlayerArcher) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -123,6 +133,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() + r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
+						this.setVelX(-2);
 					}
 				} else if(tempObject.getId() == ID.PlayerMage) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -132,6 +143,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() + r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
+						this.setVelX(-2);
 					}
 				} else if(tempObject.getId() == ID.PlayerBerserker) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -141,6 +153,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() + r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
+						this.setVelX(-2);
 					}
 				} else if(tempObject.getId() == ID.PlayerDragonSlayer) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -150,9 +163,14 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() + r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
+						this.setVelX(-2);
 					}
 				} else if(tempObject.getId() == ID.PlayerTower) {
-					
+					if(getBounds().intersects(tempObject.getBounds())) {
+						randomNumber = r.nextInt((this.maxDmg[3] - this.minDmg[3]) +1) + this.minDmg[3];
+						tempObject.setHealth(tempObject.getHealth() - randomNumber);
+						this.setVelX(0);
+					}
 				}
 			}
 		}
