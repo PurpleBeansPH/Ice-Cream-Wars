@@ -14,6 +14,7 @@ public class FootSoldier extends GameObject {
 	private int randomNumber = 0;
 	private int[] maxDmg = {75,75,100,150,250};
 	private int[] minDmg = {50,50,75,125,200};
+	private int tickSec = 0;
 	
 	// Images for each animation
 	private BufferedImage[] walkImg = new BufferedImage[4];
@@ -52,14 +53,16 @@ public class FootSoldier extends GameObject {
 			}
 			velX = -2;
 		}
+		//After Loading Image Make Animation
 		walk = new Animation(walkImg, 10);
-		attack = new Animation(attackImg, 10);
+		attack = new Animation(attackImg, 1);
 		animation = walk;
 	}
 	
 	public void tick(){
 		x += velX;
 		y += velY;
+		tickSec++;
 		animation.tick();
 		//Delete Object When Out Screen
 		if(x<0||x>Game.WIDTH){
@@ -90,10 +93,15 @@ public class FootSoldier extends GameObject {
 	public void collision() {
 		for(int i = 0; i < handler.object.size(); i++){
 			GameObject tempObject = handler.object.get(i);
+			if(tickSec >= 15){
+				animation = walk;
+				tickSec = 0;
+			}
 			
 			if(this.getId() == ID.PlayerFootSolder) {
 				if(tempObject.getId() == ID.EnemyFootSolder) {
 					if(getBounds().intersects(tempObject.getBounds())) {
+						animation = attack;
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
 						tempObject.setHealth(tempObject.getHealth() - randomNumber);
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
@@ -104,6 +112,7 @@ public class FootSoldier extends GameObject {
 					}
 				} else if(tempObject.getId() == ID.EnemyArcher) {
 					if(getBounds().intersects(tempObject.getBounds())) {
+						animation = attack;
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
 						tempObject.setHealth(tempObject.getHealth() - randomNumber);
 						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
@@ -114,6 +123,7 @@ public class FootSoldier extends GameObject {
 					}
 				} else if(tempObject.getId() == ID.EnemyMage) {
 					if(getBounds().intersects(tempObject.getBounds())) {
+						animation = attack;
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
 						tempObject.setHealth(tempObject.getHealth() - randomNumber);
 						randomNumber = r.nextInt((this.maxDmg[2] - this.minDmg[2]) +1) + this.minDmg[2];
@@ -124,6 +134,7 @@ public class FootSoldier extends GameObject {
 					}
 				} else if(tempObject.getId() == ID.EnemyBerserker) {
 					if(getBounds().intersects(tempObject.getBounds())) {
+						animation = attack;
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
 						tempObject.setHealth(tempObject.getHealth() - randomNumber);
 						randomNumber = r.nextInt((this.maxDmg[3] - this.minDmg[3]) +1) + this.minDmg[3];
@@ -134,6 +145,7 @@ public class FootSoldier extends GameObject {
 					}
 				} else if(tempObject.getId() == ID.EnemyDragonSlayer) {
 					if(getBounds().intersects(tempObject.getBounds())) {
+						animation = attack;
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
 						tempObject.setHealth(tempObject.getHealth() - randomNumber);
 						randomNumber = r.nextInt((this.maxDmg[4] - this.minDmg[4]) +1) + this.minDmg[4];
@@ -144,6 +156,7 @@ public class FootSoldier extends GameObject {
 					}
 				} else if(tempObject.getId() == ID.EnemyTower) {
 					if(getBounds().intersects(tempObject.getBounds())) {
+						animation = attack;
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
 						tempObject.setHealth(tempObject.getHealth() - randomNumber);
 						this.setVelX(0);
@@ -152,6 +165,7 @@ public class FootSoldier extends GameObject {
 			} else if(this.getId() == ID.EnemyFootSolder) {
 				if(tempObject.getId() == ID.PlayerFootSolder) {
 					if(getBounds().intersects(tempObject.getBounds())) {
+						animation = attack;
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
 						tempObject.setHealth(tempObject.getHealth() - randomNumber);
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
@@ -162,6 +176,7 @@ public class FootSoldier extends GameObject {
 					}
 				} else if(tempObject.getId() == ID.PlayerArcher) {
 					if(getBounds().intersects(tempObject.getBounds())) {
+						animation = attack;
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
 						tempObject.setHealth(tempObject.getHealth() - randomNumber);
 						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
@@ -172,6 +187,7 @@ public class FootSoldier extends GameObject {
 					}
 				} else if(tempObject.getId() == ID.PlayerMage) {
 					if(getBounds().intersects(tempObject.getBounds())) {
+						animation = attack;
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
 						tempObject.setHealth(tempObject.getHealth() - randomNumber);
 						randomNumber = r.nextInt((this.maxDmg[2] - this.minDmg[2]) +1) + this.minDmg[2];
@@ -182,6 +198,7 @@ public class FootSoldier extends GameObject {
 					}
 				} else if(tempObject.getId() == ID.PlayerBerserker) {
 					if(getBounds().intersects(tempObject.getBounds())) {
+						animation = attack;
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
 						tempObject.setHealth(tempObject.getHealth() - randomNumber);
 						randomNumber = r.nextInt((this.maxDmg[3] - this.minDmg[3]) +1) + this.minDmg[3];
@@ -192,6 +209,7 @@ public class FootSoldier extends GameObject {
 					}
 				} else if(tempObject.getId() == ID.PlayerDragonSlayer) {
 					if(getBounds().intersects(tempObject.getBounds())) {
+						animation = attack;
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
 						tempObject.setHealth(tempObject.getHealth() - randomNumber);
 						randomNumber = r.nextInt((this.maxDmg[4] - this.minDmg[4]) +1) + this.minDmg[4];
@@ -202,6 +220,7 @@ public class FootSoldier extends GameObject {
 					}
 				} else if(tempObject.getId() == ID.PlayerTower) {
 					if(getBounds().intersects(tempObject.getBounds())) {
+						animation = attack;
 						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
 						tempObject.setHealth(tempObject.getHealth() - randomNumber);
 						this.setVelX(0);
