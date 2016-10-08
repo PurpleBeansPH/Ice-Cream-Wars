@@ -1,21 +1,22 @@
 package code;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Archer extends GameObject {
-	
 	Random r = new Random();
 	Handler handler;
 	SpriteSheet spriteSheet;
-	
+	Sound sound;
 	int randomNumber = 0;
-	int[] maxDmg = {75,75,100,150,250};
-	int[] minDmg = {50,50,75,125,200};
-	private int tickSec = 0;
-	
+	int[] maxDmg = { 75, 75, 100, 150, 250 };
+	int[] minDmg = { 50, 50, 75, 125, 200 };
+	private int timeKeep = 0;
+	private int arrowTime = 0;
 	// Images for each animation
 	private BufferedImage[] walkImg = new BufferedImage[4];
 	private BufferedImage[] attackImg = new BufferedImage[5];
@@ -24,209 +25,237 @@ public class Archer extends GameObject {
 	private Animation attack;
 	// This is the actual animation
 	private Animation animation;
-	
-	public Archer (int x, int y,ID id, Handler handler) {
-		super(x,y,id);
+
+	public Archer(int x, int y, ID id, Handler handler) {
+		super(x, y, id);
 		this.handler = handler;
 		this.setHealth(400);
 		spriteSheet = new SpriteSheet(64);
-		
-		if(id == ID.PlayerArcher){
+		if (id == ID.PlayerArcher) {
 			spriteSheet.loadSprite("res/Archer_Walk.png");
-			for(int i = 0; i < walkImg.length; i++){
-				walkImg[i] = spriteSheet.grabImage(i, 0);
+			for (int i = 0; i < walkImg.length; i++) {
+				walkImg[i] = spriteSheet.grabImage(walkImg.length - i - 1, 0);
 			}
 			spriteSheet.loadSprite("res/Archer_Attack.png");
-			for(int i = 0; i < attackImg.length; i++){
-				attackImg[i] = spriteSheet.grabImage(i, 0);
+			for (int i = 0; i < attackImg.length; i++) {
+				attackImg[i] = spriteSheet.grabImage(attackImg.length - i - 1, 0);
 			}
-			velX = 2;
-		}else{
+			velX = 1;
+		} else {
 			spriteSheet.loadSprite("res/EArcher_Walk.png");
-			for(int i = 0; i < walkImg.length; i++){
+			for (int i = 0; i < walkImg.length; i++) {
 				walkImg[i] = spriteSheet.grabImage(i, 0);
 			}
 			spriteSheet.loadSprite("res/EArcher_Attack.png");
-			for(int i = 0; i < attackImg.length; i++){
+			for (int i = 0; i < attackImg.length; i++) {
 				attackImg[i] = spriteSheet.grabImage(i, 0);
 			}
-			velX = -2;
+			velX = -1;
 		}
-		//After Loading Image Make Animation
-		walk = new Animation(walkImg, 10);
-		attack = new Animation(attackImg, 1);
+		// After Loading Image Make Animation
+		walk = new Animation(walkImg, 3);
+		attack = new Animation(attackImg, 5);
 		animation = walk;
+		
+		sound = new Sound("res/CHEST_PUNCH.wav");
 	}
-	
-	public void tick(){
+
+	public void tick() {
 		x += velX;
 		y += velY;
-		tickSec++;
+		timeKeep++;
+		arrowTime++;
 		animation.tick();
-		//Delete Object When Out Screen
-		if(x<0||x>Game.WIDTH){
+		// Delete Object When Out Screen
+		if (x < 0 || x > Game.WIDTH) {
 			handler.removeObject(this);
 		}
-		
-		//Delete Object When Zero Health Screen
-		if(health <= 0){
+		// Delete Object When Zero Health Screen
+		if (health <= 0) {
 			handler.removeObject(this);
 		}
-		
 		collision();
 	}
-	
-	public void render(Graphics g){
-		if(this.getId() == ID.PlayerArcher){
-			g.drawImage(animation.getSprite(), x, y, null);		
-		} else if(this.getId() == ID.EnemyArcher){
+
+	public void render(Graphics g) {
+		Font fnt = new Font("tahoma", 1, 10);
+		if (this.getId() == ID.PlayerArcher) {
+			g.drawImage(animation.getSprite(), x, y, null);
+		} else if (this.getId() == ID.EnemyArcher) {
 			g.drawImage(animation.getSprite(), x, y, null);
 		}
-		g.drawString("HP: " + this.getHealth(), this.getX(), (this.getY()-20));
+		g.setFont(fnt);
+		g.setColor(Color.DARK_GRAY);
+		g.drawString("HP: " + this.getHealth(), this.getX(), (this.getY() - 20));
 	}
 
 	public Rectangle getBounds() {
-		return new Rectangle(x,y,32,64);
+		if (this.getId() == ID.PlayerArcher)
+			return new Rectangle(x + 10, y, 32, 64);
+		else
+			return new Rectangle(x + 20, y, 32, 64);
 	}
-	
+
 	public void collision() {
-		for(int i = 0; i < handler.object.size(); i++){
+		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject tempObject = handler.object.get(i);
-			if(tickSec >= 15){
-				animation = walk;
-				tickSec = 0;
-			}
-			
-			if(this.getId() == ID.PlayerArcher) {
-				if(tempObject.getId() == ID.EnemyFootSolder) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						animation = attack;
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						tempObject.setHealth(tempObject.getHealth() - randomNumber);
-						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
-						this.setHealth(this.getHealth() - randomNumber);
-						this.setX(this.getX() - r.nextInt((150-100)+100));
-						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
-						this.setVelX(2);
-					}
-				} else if(tempObject.getId() == ID.EnemyArcher) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						animation = attack;
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						tempObject.setHealth(tempObject.getHealth() - randomNumber);
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						this.setHealth(this.getHealth() - randomNumber);
-						this.setX(this.getX() - r.nextInt((150-100)+100));
-						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
-						this.setVelX(2);
-					}
-				} else if(tempObject.getId() == ID.EnemyMage) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						animation = attack;
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						tempObject.setHealth(tempObject.getHealth() - randomNumber);
-						randomNumber = r.nextInt((this.maxDmg[2] - this.minDmg[2]) +1) + this.minDmg[2];
-						this.setHealth(this.getHealth() - randomNumber);
-						this.setX(this.getX() - r.nextInt((150-100)+100));
-						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
-						this.setVelX(2);
-					}
-				} else if(tempObject.getId() == ID.EnemyBerserker) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						animation = attack;
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						tempObject.setHealth(tempObject.getHealth() - randomNumber);
-						randomNumber = r.nextInt((this.maxDmg[3] - this.minDmg[3]) +1) + this.minDmg[3];
-						this.setHealth(this.getHealth() - randomNumber);
-						this.setX(this.getX() - r.nextInt((150-100)+100));
-						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
-						this.setVelX(2);
-					}
-				} else if(tempObject.getId() == ID.EnemyDragonSlayer) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						animation = attack;
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						tempObject.setHealth(tempObject.getHealth() - randomNumber);
-						randomNumber = r.nextInt((this.maxDmg[4] - this.minDmg[4]) +1) + this.minDmg[4];
-						this.setHealth(this.getHealth() - randomNumber);
-						this.setX(this.getX() - r.nextInt((150-100)+100));
-						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
-						this.setVelX(2);
-					}
-				} else if(tempObject.getId() == ID.EnemyTower) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						animation = attack;
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						tempObject.setHealth(tempObject.getHealth() - randomNumber);
-						this.setVelX(0);
+			if (timeKeep >= 10) {
+				if (arrowTime > 5) {
+					animation = walk;
+					if (this.getId() == ID.PlayerArcher) {
+						this.setVelX(1);
+					} else {
+						this.setVelX(-1);
 					}
 				}
-			} else if(this.getId() == ID.EnemyArcher) {
-				if(tempObject.getId() == ID.PlayerFootSolder) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						animation = attack;
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						tempObject.setHealth(tempObject.getHealth() - randomNumber);
-						randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) +1) + this.minDmg[0];
-						this.setHealth(this.getHealth() - randomNumber);
-						this.setX(this.getX() + r.nextInt((150-100)+100));
-						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
-						this.setVelX(-2);
+				if (arrowTime > 80) {
+					this.setVelX(0);
+					animation = attack;
+					if (arrowTime > 100) {
+						if (this.getId() == ID.PlayerArcher) {
+							handler.addObject(new Arrow(this.getX() + 16, this.getY() + 32, ID.PlayerArcherArrow, handler));
+							this.setVelX(0);
+						} else {
+							handler.addObject(new Arrow(this.getX() - 16, this.getY() + 32, ID.EnemyArcherArrow, handler));
+							this.setVelX(0);
+						}
+						this.arrowTime = 0;
 					}
-				} else if(tempObject.getId() == ID.PlayerArcher) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						animation = attack;
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						tempObject.setHealth(tempObject.getHealth() - randomNumber);
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						this.setHealth(this.getHealth() - randomNumber);
-						this.setX(this.getX() + r.nextInt((150-100)+100));
-						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
-						this.setVelX(-2);
+				}
+				if (this.getId() == ID.PlayerArcher) {
+					if (tempObject.getId() == ID.EnemyFootSolder) {
+						if (getBounds().intersects(tempObject.getBounds())) {
+							animation = attack;
+							sound.loop(1);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							tempObject.setHealth(tempObject.getHealth() - randomNumber);
+							randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) + 1) + this.minDmg[0];
+							this.setHealth(this.getHealth() - randomNumber);
+							this.setVelX(-3);
+							timeKeep = 0;
+						}
+					} else if (tempObject.getId() == ID.EnemyArcher) {
+						if (getBounds().intersects(tempObject.getBounds())) {
+							animation = attack;
+							sound.loop(1);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							tempObject.setHealth(tempObject.getHealth() - randomNumber);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							this.setHealth(this.getHealth() - randomNumber);
+							this.setVelX(-3);
+							timeKeep = 0;
+						}
+					} else if (tempObject.getId() == ID.EnemyMage) {
+						if (getBounds().intersects(tempObject.getBounds())) {
+							animation = attack;
+							sound.loop(1);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							tempObject.setHealth(tempObject.getHealth() - randomNumber);
+							randomNumber = r.nextInt((this.maxDmg[2] - this.minDmg[2]) + 1) + this.minDmg[2];
+							this.setHealth(this.getHealth() - randomNumber);
+							this.setVelX(-3);
+							timeKeep = 0;
+						}
+					} else if (tempObject.getId() == ID.EnemyBerserker) {
+						if (getBounds().intersects(tempObject.getBounds())) {
+							animation = attack;
+							sound.loop(1);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							tempObject.setHealth(tempObject.getHealth() - randomNumber);
+							randomNumber = r.nextInt((this.maxDmg[3] - this.minDmg[3]) + 1) + this.minDmg[3];
+							this.setHealth(this.getHealth() - randomNumber);
+							this.setVelX(-3);
+							timeKeep = 0;
+						}
+					} else if (tempObject.getId() == ID.EnemyDragonSlayer) {
+						if (getBounds().intersects(tempObject.getBounds())) {
+							animation = attack;
+							sound.loop(1);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							tempObject.setHealth(tempObject.getHealth() - randomNumber);
+							randomNumber = r.nextInt((this.maxDmg[4] - this.minDmg[4]) + 1) + this.minDmg[4];
+							this.setHealth(this.getHealth() - randomNumber);
+							this.setVelX(-3);
+							timeKeep = 0;
+						}
+					} else if (tempObject.getId() == ID.EnemyTower) {
+						if (getBounds().intersects(tempObject.getBounds())) {
+							animation = attack;
+							sound.loop(1);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							tempObject.setHealth(tempObject.getHealth() - randomNumber);
+							this.setVelX(0);
+							timeKeep = 0;
+						}
 					}
-				} else if(tempObject.getId() == ID.PlayerMage) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						animation = attack;
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						tempObject.setHealth(tempObject.getHealth() - randomNumber);
-						randomNumber = r.nextInt((this.maxDmg[2] - this.minDmg[2]) +1) + this.minDmg[2];
-						this.setHealth(this.getHealth() - randomNumber);
-						this.setX(this.getX() + r.nextInt((150-100)+100));
-						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
-						this.setVelX(-2);
-					}
-				} else if(tempObject.getId() == ID.PlayerBerserker) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						animation = attack;
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						tempObject.setHealth(tempObject.getHealth() - randomNumber);
-						randomNumber = r.nextInt((this.maxDmg[3] - this.minDmg[3]) +1) + this.minDmg[3];
-						this.setHealth(this.getHealth() - randomNumber);
-						this.setX(this.getX() + r.nextInt((150-100)+100));
-						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
-						this.setVelX(-2);
-					}
-				} else if(tempObject.getId() == ID.PlayerDragonSlayer) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						animation = attack;
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						tempObject.setHealth(tempObject.getHealth() - randomNumber);
-						randomNumber = r.nextInt((this.maxDmg[4] - this.minDmg[4]) +1) + this.minDmg[4];
-						this.setHealth(this.getHealth() - randomNumber);
-						this.setX(this.getX() + r.nextInt((150-100)+100));
-						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
-						this.setVelX(-2);
-					}
-				} else if(tempObject.getId() == ID.PlayerTower) {
-					if(getBounds().intersects(tempObject.getBounds())) {
-						animation = attack;
-						randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) +1) + this.minDmg[1];
-						tempObject.setHealth(tempObject.getHealth() - randomNumber);
-						this.setVelX(0);
+				} else if (this.getId() == ID.EnemyArcher) {
+					if (tempObject.getId() == ID.PlayerFootSolder) {
+						if (getBounds().intersects(tempObject.getBounds())) {
+							animation = attack;
+							sound.loop(1);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							tempObject.setHealth(tempObject.getHealth() - randomNumber);
+							randomNumber = r.nextInt((this.maxDmg[0] - this.minDmg[0]) + 1) + this.minDmg[0];
+							this.setHealth(this.getHealth() - randomNumber);
+							this.setVelX(3);
+							timeKeep = 0;
+						}
+					} else if (tempObject.getId() == ID.PlayerArcher) {
+						if (getBounds().intersects(tempObject.getBounds())) {
+							animation = attack;
+							sound.loop(1);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							tempObject.setHealth(tempObject.getHealth() - randomNumber);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							this.setHealth(this.getHealth() - randomNumber);
+							this.setVelX(3);
+							timeKeep = 0;
+						}
+					} else if (tempObject.getId() == ID.PlayerMage) {
+						if (getBounds().intersects(tempObject.getBounds())) {
+							animation = attack;
+							sound.loop(1);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							tempObject.setHealth(tempObject.getHealth() - randomNumber);
+							randomNumber = r.nextInt((this.maxDmg[2] - this.minDmg[2]) + 1) + this.minDmg[2];
+							this.setHealth(this.getHealth() - randomNumber);
+							this.setVelX(3);
+							timeKeep = 0;
+						}
+					} else if (tempObject.getId() == ID.PlayerBerserker) {
+						if (getBounds().intersects(tempObject.getBounds())) {
+							animation = attack;
+							sound.loop(1);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							tempObject.setHealth(tempObject.getHealth() - randomNumber);
+							randomNumber = r.nextInt((this.maxDmg[3] - this.minDmg[3]) + 1) + this.minDmg[3];
+							this.setHealth(this.getHealth() - randomNumber);
+							this.setVelX(3);
+							timeKeep = 0;
+						}
+					} else if (tempObject.getId() == ID.PlayerDragonSlayer) {
+						if (getBounds().intersects(tempObject.getBounds())) {
+							animation = attack;
+							sound.loop(1);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							tempObject.setHealth(tempObject.getHealth() - randomNumber);
+							randomNumber = r.nextInt((this.maxDmg[4] - this.minDmg[4]) + 1) + this.minDmg[4];
+							this.setHealth(this.getHealth() - randomNumber);
+							this.setVelX(3);
+							timeKeep = 0;
+						}
+					} else if (tempObject.getId() == ID.PlayerTower) {
+						if (getBounds().intersects(tempObject.getBounds())) {
+							animation = attack;
+							sound.loop(1);
+							randomNumber = r.nextInt((this.maxDmg[1] - this.minDmg[1]) + 1) + this.minDmg[1];
+							tempObject.setHealth(tempObject.getHealth() - randomNumber);
+							this.setVelX(0);
+							timeKeep = 0;
+						}
 					}
 				}
 			}
 		}
 	}
-
 }

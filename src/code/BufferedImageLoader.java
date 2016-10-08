@@ -7,10 +7,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class BufferedImageLoader {
-
 	BufferedImage image;
-	
-	public BufferedImage loadImage(String path){
+
+	public BufferedImage loadImage(String path) {
 		try {
 			image = ImageIO.read(new File(path));
 		} catch (IOException e) {
