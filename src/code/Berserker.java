@@ -1,34 +1,66 @@
 package code;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Berserker extends GameObject {
 	
 	Random r = new Random();
 	Handler handler;
+	SpriteSheet spriteSheet;
 
 	int randomNumber = 0;
 	int[] maxDmg = {75,75,100,150,250};
 	int[] minDmg = {50,50,75,125,200};
 	
+	// Images for each animation
+	private BufferedImage[] walkImg = new BufferedImage[4];
+	private BufferedImage[] attackImg = new BufferedImage[5];
+	// These are animation states
+	private Animation walk;
+	private Animation attack;
+	// This is the actual animation
+	private Animation animation;
+	
 	public Berserker (int x, int y,ID id, Handler handler) {
 		super(x,y,id);
 		this.handler = handler;
 		this.setHealth(1500);
+		spriteSheet = new SpriteSheet(64);
 		
-		if(id == ID.EnemyBerserker)
-			velX = -2;
-		else
+		if(id == ID.PlayerBerserker){
+			spriteSheet.loadSprite("res/Berserker_Walk.png");
+			for(int i = 0; i < walkImg.length; i++){
+				walkImg[i] = spriteSheet.grabImage(i, 0);
+			}
+			spriteSheet.loadSprite("res/Berserker_Attack.png");
+			for(int i = 0; i < attackImg.length; i++){
+				attackImg[i] = spriteSheet.grabImage(i, 0);
+			}
 			velX = 2;
+		}else{
+			spriteSheet.loadSprite("res/EBerserker_Walk.png");
+			for(int i = 0; i < walkImg.length; i++){
+				walkImg[i] = spriteSheet.grabImage(i, 0);
+			}
+			spriteSheet.loadSprite("res/EBerserker_Attack.png");
+			for(int i = 0; i < attackImg.length; i++){
+				attackImg[i] = spriteSheet.grabImage(i, 0);
+			}
+			velX = -2;
+		}
+		//After Loading Image Make Animation
+		walk = new Animation(walkImg, 10);
+		attack = new Animation(attackImg, 10);
+		animation = walk;
 	}
 	
 	public void tick(){
 		x += velX;
 		y += velY;
-		
+		animation.tick();
 		//Delete Object When Out Screen
 		if(x<0||x>Game.WIDTH){
 			handler.removeObject(this);
@@ -43,8 +75,11 @@ public class Berserker extends GameObject {
 	}
 	
 	public void render(Graphics g){
-		g.setColor(Color.MAGENTA);
-		g.fillRect(x, y, 32, 64);
+		if(this.getId() == ID.PlayerBerserker){
+			g.drawImage(animation.getSprite(), x, y, null);			
+		} else if(this.getId() == ID.EnemyBerserker){
+			g.drawImage(animation.getSprite(), x, y, null);	
+		}
 		g.drawString("HP: " + this.getHealth(), this.getX(), (this.getY()-20));
 	}
 
@@ -65,6 +100,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() - r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
+						this.setVelX(2);
 					}
 				} else if(tempObject.getId() == ID.EnemyArcher) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -74,6 +110,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() - r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
+						this.setVelX(2);
 					}
 				} else if(tempObject.getId() == ID.EnemyMage) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -83,6 +120,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() - r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
+						this.setVelX(2);
 					}
 				} else if(tempObject.getId() == ID.EnemyBerserker) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -92,6 +130,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() - r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
+						this.setVelX(2);
 					}
 				} else if(tempObject.getId() == ID.EnemyDragonSlayer) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -101,9 +140,14 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() - r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() + r.nextInt((150-100)+100));
+						this.setVelX(2);
 					}
 				} else if(tempObject.getId() == ID.EnemyTower) {
-					
+					if(getBounds().intersects(tempObject.getBounds())) {
+						randomNumber = r.nextInt((this.maxDmg[3] - this.minDmg[3]) +1) + this.minDmg[3];
+						tempObject.setHealth(tempObject.getHealth() - randomNumber);
+						this.setVelX(0);
+					}
 				}
 			} else if(this.getId() == ID.EnemyBerserker) {
 				if(tempObject.getId() == ID.PlayerFootSolder) {
@@ -114,6 +158,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() + r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
+						this.setVelX(-2);
 					}
 				} else if(tempObject.getId() == ID.PlayerArcher) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -123,6 +168,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() + r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
+						this.setVelX(-2);
 					}
 				} else if(tempObject.getId() == ID.PlayerMage) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -132,6 +178,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() + r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
+						this.setVelX(-2);
 					}
 				} else if(tempObject.getId() == ID.PlayerBerserker) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -141,6 +188,7 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() + r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
+						this.setVelX(-2);
 					}
 				} else if(tempObject.getId() == ID.PlayerDragonSlayer) {
 					if(getBounds().intersects(tempObject.getBounds())) {
@@ -150,9 +198,14 @@ public class Berserker extends GameObject {
 						this.setHealth(this.getHealth() - randomNumber);
 						this.setX(this.getX() + r.nextInt((150-100)+100));
 						tempObject.setX(tempObject.getX() - r.nextInt((150-100)+100));
+						this.setVelX(-2);
 					}
 				} else if(tempObject.getId() == ID.PlayerTower) {
-					
+					if(getBounds().intersects(tempObject.getBounds())) {
+						randomNumber = r.nextInt((this.maxDmg[3] - this.minDmg[3]) +1) + this.minDmg[3];
+						tempObject.setHealth(tempObject.getHealth() - randomNumber);
+						this.setVelX(0);
+					}
 				}
 			}
 		}
