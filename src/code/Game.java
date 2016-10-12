@@ -26,9 +26,10 @@ public class Game extends Canvas implements Runnable {
 	public STATE gameState = STATE.Menu;
 
 	public Game() {
+		// First Load 
 		handler = new Handler();
-		new Window(WIDTH, HEIGHT, "ICE CREAM WARS", this);
 		display = new Display();
+		
 		player = new Player(handler, display);
 		this.addKeyListener(player);
 		ai = new AI(handler, display);
@@ -36,9 +37,10 @@ public class Game extends Canvas implements Runnable {
 		this.addMouseListener(menu);
 		gameOver = new GameOver(this);
 		this.addMouseListener(gameOver);
-		// sound = new Sound("res/weeds.wav");
 		sound = new Sound("res/8bit_Loop_BackFromPurgatory.wav");
 		sound.continuous();
+		
+		new Window(WIDTH, HEIGHT, "ICE CREAM WARS", this);
 	}
 
 	public synchronized void start() {

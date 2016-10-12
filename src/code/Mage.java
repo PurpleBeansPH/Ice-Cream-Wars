@@ -29,7 +29,7 @@ public class Mage extends GameObject {
 	public Mage(int x, int y, ID id, Handler handler) {
 		super(x, y, id);
 		this.handler = handler;
-		this.setHealth(700);
+		this.setHealth(900);
 		spriteSheet = new SpriteSheet(64);
 		if (id == ID.PlayerMage) {
 			spriteSheet.loadSprite("res/Mage_Walk.png");

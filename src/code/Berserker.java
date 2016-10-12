@@ -88,7 +88,10 @@ public class Berserker extends GameObject {
 	}
 
 	public Rectangle getBounds() {
-		return new Rectangle(x, y, 32, 64);
+		if (this.getId() == ID.PlayerArcher)
+			return new Rectangle(x + 10, y, 32, 64);
+		else
+			return new Rectangle(x + 20, y, 32, 64);
 	}
 
 	public void collision() {

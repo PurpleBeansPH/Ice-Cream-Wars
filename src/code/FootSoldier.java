@@ -29,7 +29,7 @@ public class FootSoldier extends GameObject {
 	public FootSoldier(int x, int y, ID id, Handler handler) {
 		super(x, y, id);
 		this.handler = handler;
-		this.setHealth(300);
+		this.setHealth(400);
 		spriteSheet = new SpriteSheet(64);
 		if (id == ID.PlayerFootSolder) {
 			spriteSheet.loadSprite("res/Soldier_Walk.png");

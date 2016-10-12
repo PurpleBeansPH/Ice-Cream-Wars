@@ -22,10 +22,9 @@ public class AI {
 		timeKeep = display.getTime();
 		if (timeKeep == 5 * aiGoldCount) {
 			if (aiGoldAllowed == 1) {
-				aiGold = aiGold + (300 * display.getLevel());
+				aiGold = aiGold + (300 * (display.getLevel()));
 				aiGoldCount++;
 				aiGoldAllowed = 0;
-				System.out.println(display.getLevel());
 			}
 		} else {
 			aiGoldAllowed = 1;
