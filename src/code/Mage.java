@@ -7,14 +7,15 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+//See Archer if you want info
 public class Mage extends GameObject {
-	Random r = new Random();
-	Handler handler;
-	SpriteSheet spriteSheet;
-	Sound sound;
-	int randomNumber = 0;
-	int[] maxDmg = { 75, 75, 100, 150, 250 };
-	int[] minDmg = { 50, 50, 75, 125, 200 };
+	private Random r = new Random();
+	private Handler handler;
+	private SpriteSheet spriteSheet;
+	private Sound sound;
+	private int randomNumber = 0;
+	private int[] maxDmg = { 75, 75, 100, 150, 250 };
+	private int[] minDmg = { 50, 50, 75, 125, 200 };
 	private int timeKeep = 0;
 	private int fireballTime = 0;
 	// Images for each animation

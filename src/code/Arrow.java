@@ -6,28 +6,28 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Arrow extends GameObject {
-	BufferedImage image;
-	BufferedImageLoader loader;
-	Random r = new Random();
-	Handler handler;
-	Sound sound;
-	int randomNumber = 0;
-	int[] maxDmg = { 75, 75, 100, 150, 250 };
-	int[] minDmg = { 50, 50, 75, 125, 200 };
+	private BufferedImage image;
+	private BufferedImageLoader loader;
+	private Random r = new Random();
+	private Handler handler;
+	private Sound sound;
+	private int randomNumber = 0;
+	private int[] maxDmg = { 75, 75, 100, 150, 250 };
+	private int[] minDmg = { 50, 50, 75, 125, 200 };
 
 	public Arrow(int x, int y, ID id, Handler handler) {
-		super(x, y, id);
-		this.handler = handler;
-		this.setHealth(100);
-		loader = new BufferedImageLoader();
-		if (this.getId() == ID.PlayerArcherArrow) {
-			image = loader.loadImage("res/Arrow.png");
+		super(x, y, id); // Set X, Y and ID values
+		this.handler = handler; // Used to Set dmg
+		this.setHealth(100); // Arrow Hp 100
+		loader = new BufferedImageLoader(); // Make Object to load image
+		if (this.getId() == ID.PlayerArcherArrow) { // If Player Archer Arrow 
+			image = loader.loadImage("res/Arrow.png"); // Load Player Arrow
 			velX = 3;
-		} else {
-			image = loader.loadImage("res/EArrow.png");
+		} else { // If Enemy ARcher Arrow
+			image = loader.loadImage("res/EArrow.png"); // Load Enemy Arrow
 			velX = -3;
 		}
-		sound = new Sound("res/CHEST_PUNCH.wav");
+		sound = new Sound("res/CHEST_PUNCH.wav"); // Load Sound File
 	}
 
 	public void tick() {
@@ -46,13 +46,15 @@ public class Arrow extends GameObject {
 
 	public void render(Graphics g) {
 		g.drawImage(image, x, y, null);
-		// g.drawRect(x, y, 32, 16);
 	}
 
 	public Rectangle getBounds() {
 		return new Rectangle(x, y, 32, 16);
 	}
 
+	/*
+	 * This Method does all Collision Detecting and does Damage part
+	 */
 	public void collision() {
 		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject tempObject = handler.object.get(i);

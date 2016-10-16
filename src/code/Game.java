@@ -7,48 +7,52 @@ import java.awt.image.BufferedImage;
 
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 1L;
-	public static final int WIDTH = 1280, HEIGHT = 720;
-	private Thread thread;
-	private boolean running = false;
-	private Handler handler;
-	private AI ai;
-	private Player player;
-	private Display display;
-	private Menu menu;
-	private GameOver gameOver;
-	private Sound sound;
-	private BufferedImage graphic;
+	public static final int WIDTH = 1280, HEIGHT = 720; // Display Size
+	private Thread thread; // Thread
+	private boolean running = false; // is the thread running?
+	private Handler handler; // Handler Class
+	private AI ai; // Ai Class
+	private Player player; // Player Class
+	private Display display; // Display Class
+	private Menu menu; // Menu Class
+	private GameOver gameOver; // GameOver Class
+	private Sound sound; // Sound Class
+	private BufferedImage graphic; // store Background image
 
-	public enum STATE {
+	public enum STATE { // State of game
 		Menu, Game, GameOver;
 	}
 
-	public STATE gameState = STATE.Menu;
+	public STATE gameState = STATE.Menu; // What is State is on
 
 	public Game() {
 		// First Load 
 		handler = new Handler();
 		display = new Display();
 		
-		player = new Player(handler, display);
+		player = new Player(handler, display); // Make Player Object
 		this.addKeyListener(player);
-		ai = new AI(handler, display);
-		menu = new Menu(this, handler);
+		ai = new AI(handler, display); // Make ai Object
+		menu = new Menu(this, handler); // Make menu Object
 		this.addMouseListener(menu);
-		gameOver = new GameOver(this);
+		gameOver = new GameOver(this); // Make gameOver Object
 		this.addMouseListener(gameOver);
-		sound = new Sound("res/8bit_Loop_BackFromPurgatory.wav");
+		sound = new Sound("res/8bit_Loop_BackFromPurgatory.wav");  // Make sound Object
 		sound.continuous();
 		
-		new Window(WIDTH, HEIGHT, "ICE CREAM WARS", this);
+		new Window(WIDTH, HEIGHT, "ICE CREAM WARS", this); // Make window(JFrame)
 	}
-
+	/*
+	 * Thread start
+	 */
 	public synchronized void start() {
 		thread = new Thread(this);
 		thread.start();
 		running = true;
 	}
-
+	/*
+	 * Thread stop
+	 */
 	public synchronized void stop() {
 		try {
 			thread.join();
@@ -57,8 +61,23 @@ public class Game extends Canvas implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
+	/*
+	 * Thread Run
+	 */
 	public void run() {
+		/*
+		 * This is best part
+		 * It CALLED GAME LOOP make mine job lot easier
+		 * it has 2 part:
+		 * TICK or TICK - First you tick anything like time, movement, logic, attacks, animations 
+		 * RENDER or TOCK - Second You Render anything like Background, GameObject, GUI, and many more thing.
+		 * 
+		 * rest of GAME LOOP is used to make close to 60 ticks per second or 60 frames per second
+		 * because you don't want waste system resources 
+		 * 
+		 * If want more info here http://www.java-gaming.org/index.php?topic=24220.0
+		 * it talks about bad GAME LOOPS and Good GAME LOOPS
+		 */
 		long lastTime = System.nanoTime();
 		double amountOfTicks = 60.0;
 		double ns = 1000000000 / amountOfTicks;
@@ -70,11 +89,11 @@ public class Game extends Canvas implements Runnable {
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			while (delta >= 1) {
-				tick();
+				tick(); // Calls Tick Part
 				delta--;
 			}
 			if (running)
-				render();
+				render(); // Calls Render Part
 			frames++;
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
@@ -84,7 +103,10 @@ public class Game extends Canvas implements Runnable {
 		}
 		stop();
 	}
-
+	/*
+	 * This is Tick Part of Game Loop
+	 * this is used tick all game object, change gold values, and others things, checking if click buttons, and more thing.
+	 */
 	public void tick() {
 		handler.tick();
 		if (handler.gameOver == 1) {
@@ -100,7 +122,11 @@ public class Game extends Canvas implements Runnable {
 			gameOver.tick();
 		}
 	}
-
+	
+	/*
+	 * This is Render part of Game Loop
+	 * This is used render anything like Game Object, Buttons, Display.
+	 */
 	public void render() {
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null) {

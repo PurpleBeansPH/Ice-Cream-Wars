@@ -7,11 +7,12 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+//See Archer if you want info
 public class FootSoldier extends GameObject {
-	Random r = new Random();
-	Handler handler;
-	SpriteSheet spriteSheet;
-	Sound sound;
+	private Random r = new Random();
+	private Handler handler;
+	private SpriteSheet spriteSheet;
+	private Sound sound;
 	
 	private int randomNumber = 0;
 	private int[] maxDmg = { 75, 75, 100, 150, 250 };
@@ -93,12 +94,14 @@ public class FootSoldier extends GameObject {
 		return new Rectangle(x, y, 32, 64);
 	}
 
+	/*
+	 * This Method does all Collision Detecting and does Damage part
+	 */
 	public void collision() {
 		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject tempObject = handler.object.get(i);
 			if (timeKeep >= 10) {
 				animation = walk;
-				
 				if (this.getId() == ID.PlayerFootSolder) {
 					this.setVelX(2);
 					if (tempObject.getId() == ID.EnemyFootSolder) {

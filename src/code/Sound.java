@@ -9,11 +9,11 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 
 public class Sound {
-	private File yourFile;
-	private AudioInputStream stream;
-	private AudioFormat format;
-	private DataLine.Info info;
-	private Clip clip;
+	private File yourFile; // File Type WAV
+	private AudioInputStream stream; // this is used to steam file
+	private AudioFormat format; // Get Format
+	private DataLine.Info info; // Info like how long and ect
+	private Clip clip; // Chip or sound it self
 
 	public Sound(String wav) {
 		this.yourFile = new File(wav);
@@ -30,14 +30,6 @@ public class Sound {
 
 	public void play(){
 		this.clip.start();
-	}
-	
-	public void flush(){
-		this.clip.drain();
-	}
-	
-	public boolean running(){
-		return this.clip.isRunning();
 	}
 	
 	public void continuous(){

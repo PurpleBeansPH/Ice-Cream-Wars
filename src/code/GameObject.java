@@ -3,11 +3,14 @@ package code;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+/*
+ *  This is Class is used for any game object from Units, Building, projectile and many more.
+ */
 public abstract class GameObject {
-	protected int x, y;
-	protected ID id;
-	protected int velX, velY;
-	protected int health;
+	protected int x, y; // X and Y to get position on window
+	protected ID id; // To see if enemy object or player object
+	protected int velX, velY; // Movement of Object
+	protected int health; // Health of object
 
 	public GameObject(int x, int y, ID id) {
 		this.x = x;

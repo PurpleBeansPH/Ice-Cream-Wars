@@ -8,15 +8,15 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Archer extends GameObject {
-	Random r = new Random();
-	Handler handler;
-	SpriteSheet spriteSheet;
-	Sound sound;
-	int randomNumber = 0;
-	int[] maxDmg = { 75, 75, 100, 150, 250 };
-	int[] minDmg = { 50, 50, 75, 125, 200 };
-	private int timeKeep = 0;
-	private int arrowTime = 0;
+	private Random r = new Random(); // Random Number Generator
+	private Handler handler; // To Spawn Arrows
+	private SpriteSheet spriteSheet; // To Load Images
+	private Sound sound; // To play Hit Sounds
+	int randomNumber = 0; // RandomNumber variable
+	int[] maxDmg = { 75, 75, 100, 150, 250 }; // Self Explained
+	int[] minDmg = { 50, 50, 75, 125, 200 }; // Self Explained
+	private int timeKeep = 0; // It used for cooldown for attacks
+	private int arrowTime = 0; // Make Time Variable for Arrow
 	// Images for each animation
 	private BufferedImage[] walkImg = new BufferedImage[4];
 	private BufferedImage[] attackImg = new BufferedImage[5];
@@ -27,37 +27,37 @@ public class Archer extends GameObject {
 	private Animation animation;
 
 	public Archer(int x, int y, ID id, Handler handler) {
-		super(x, y, id);
-		this.handler = handler;
-		this.setHealth(400);
-		spriteSheet = new SpriteSheet(64);
-		if (id == ID.PlayerArcher) {
-			spriteSheet.loadSprite("res/Archer_Walk.png");
+		super(x, y, id); // Call GameObject to set X,Y, and ID
+		this.handler = handler; // This Handler to able to spawn arrow
+		this.setHealth(400); // Set Health
+		spriteSheet = new SpriteSheet(64); // Make Object to Able to load Images.
+		if (id == ID.PlayerArcher) { // If is Player Archer Do This
+			spriteSheet.loadSprite("res/Archer_Walk.png"); // Load Player Archer Walk Image File
+			for (int i = 0; i < walkImg.length; i++) { // For loop
+				walkImg[i] = spriteSheet.grabImage(walkImg.length - i - 1, 0); // Load Image
+			}
+			spriteSheet.loadSprite("res/Archer_Attack.png"); // Load Player Archer Attack Image File
+			for (int i = 0; i < attackImg.length; i++) { // For loop
+				attackImg[i] = spriteSheet.grabImage(attackImg.length - i - 1, 0); // Load Image
+			}
+			velX = 1; // set Velocity of Player Archer to x = 1
+		} else { // Else Enemy Archer
+			spriteSheet.loadSprite("res/EArcher_Walk.png"); // Load Enemy Archer Walk Image File
 			for (int i = 0; i < walkImg.length; i++) {
-				walkImg[i] = spriteSheet.grabImage(walkImg.length - i - 1, 0);
+				walkImg[i] = spriteSheet.grabImage(i, 0); // Load Image
 			}
-			spriteSheet.loadSprite("res/Archer_Attack.png");
+			spriteSheet.loadSprite("res/EArcher_Attack.png"); // Load Enemy Archer Attack Image File
 			for (int i = 0; i < attackImg.length; i++) {
-				attackImg[i] = spriteSheet.grabImage(attackImg.length - i - 1, 0);
-			}
-			velX = 1;
-		} else {
-			spriteSheet.loadSprite("res/EArcher_Walk.png");
-			for (int i = 0; i < walkImg.length; i++) {
-				walkImg[i] = spriteSheet.grabImage(i, 0);
-			}
-			spriteSheet.loadSprite("res/EArcher_Attack.png");
-			for (int i = 0; i < attackImg.length; i++) {
-				attackImg[i] = spriteSheet.grabImage(i, 0);
+				attackImg[i] = spriteSheet.grabImage(i, 0); // Load Image
 			}
 			velX = -1;
 		}
 		// After Loading Image Make Animation
-		walk = new Animation(walkImg, 3);
-		attack = new Animation(attackImg, 5);
-		animation = walk;
+		walk = new Animation(walkImg, 3); // Make Walk Animation
+		attack = new Animation(attackImg, 5); // Make Attacking Animation
+		animation = walk; // Run Walk Animation
 		
-		sound = new Sound("res/CHEST_PUNCH.wav");
+		sound = new Sound("res/CHEST_PUNCH.wav"); // Load Sound
 	}
 
 	public void tick() {
@@ -95,7 +95,10 @@ public class Archer extends GameObject {
 		else
 			return new Rectangle(x + 20, y, 32, 64);
 	}
-
+	
+	/*
+	 * This Method does all Collision Detecting and does Damage part also for this class also Arrow
+	 */
 	public void collision() {
 		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject tempObject = handler.object.get(i);

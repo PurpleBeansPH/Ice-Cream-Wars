@@ -1,27 +1,23 @@
 package code;
 
-import java.util.Random;
-
 public class AI {
-	Random r = new Random();
-	private Handler handler;
-	private Display display;
-	private int aiGold = 600;
-	private int aiGoldCount = 1;
-	private int aiGoldAllowed = 1;
-	private int timeKeep = 0;
-	private int cooldownTime = 0;
-	private int randomNumber = 0;
+	private Handler handler; // Make AI class able to talk Handler to spawn enemy.
+	private Display display; // Make AI class able check time for gold.
+	private int aiGold = 600; // Starting Gold of AI.
+	private int aiGoldCount = 1; // How many time did AI get gold.
+	private int aiGoldAllowed = 1; // This variable make AI only able get money every 5 seconds.
+	private int timeKeep = 0; // To Store Display Time
+	private int cooldownTime = 0; // CooldownTime Start.
 
 	public AI(Handler handler, Display display) {
-		this.handler = handler;
-		this.display = display;
+		this.handler = handler; // Get Handler from Game class.
+		this.display = display; // Get Display from Game class.
 	}
 
 	public void tick() {
-		timeKeep = display.getTime();
-		if (timeKeep == 5 * aiGoldCount) {
-			if (aiGoldAllowed == 1) {
+		timeKeep = display.getTime(); // Get Time from display class.
+		if (timeKeep == 5 * aiGoldCount) { // Check if 5 sec are done.
+			if (aiGoldAllowed == 1) { // This prevent mill seconds able to respawn gold
 				aiGold = aiGold + (300 * (display.getLevel()));
 				aiGoldCount++;
 				aiGoldAllowed = 0;
@@ -29,30 +25,25 @@ public class AI {
 		} else {
 			aiGoldAllowed = 1;
 		}
-		if (cooldownTime < timeKeep) {
+		if (cooldownTime < timeKeep) { // Cooldown Time this prevent user spam enemy.
 			if (aiGold >= 3000) {
-				randomNumber = r.nextInt(100 - 50 + 1) + 50;
-				handler.addObject(new DragonSlayer(1100 + randomNumber, 490, ID.EnemyDragonSlayer, handler));
+				handler.addObject(new DragonSlayer(1200, 490, ID.EnemyDragonSlayer, handler));
 				aiGold = aiGold - 3000;
 				cooldownTime = timeKeep;
 			} else if (aiGold >= 1000) {
-				randomNumber = r.nextInt(100 - 50 + 1) + 50;
-				handler.addObject(new Berserker(1100 + randomNumber, 490, ID.EnemyBerserker, handler));
+				handler.addObject(new Berserker(1200, 490, ID.EnemyBerserker, handler));
 				aiGold = aiGold - 1000;
 				cooldownTime = timeKeep;
 			} else if (aiGold >= 600) {
-				randomNumber = r.nextInt(100 - 50 + 1) + 50;
-				handler.addObject(new Mage(1100 + randomNumber, 490, ID.EnemyMage, handler));
+				handler.addObject(new Mage(1200, 490, ID.EnemyMage, handler));
 				aiGold = aiGold - 600;
 				cooldownTime = timeKeep;
 			} else if (aiGold >= 300) {
-				randomNumber = r.nextInt(100 - 50 + 1) + 50;
-				handler.addObject(new Archer(1100 + randomNumber, 490, ID.EnemyArcher, handler));
+				handler.addObject(new Archer(1200, 490, ID.EnemyArcher, handler));
 				aiGold = aiGold - 300;
 				cooldownTime = timeKeep;
 			} else if (aiGold >= 100) {
-				randomNumber = r.nextInt(100 - 50 + 1) + 50;
-				handler.addObject(new FootSoldier(1100 + randomNumber, 490, ID.EnemyFootSolder, handler));
+				handler.addObject(new FootSoldier(1200, 490, ID.EnemyFootSolder, handler));
 				aiGold = aiGold - 100;
 				cooldownTime = timeKeep;
 			}

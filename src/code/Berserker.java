@@ -7,14 +7,15 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+//See Archer if you want info
 public class Berserker extends GameObject {
-	Random r = new Random();
-	Handler handler;
-	SpriteSheet spriteSheet;
-	Sound sound;
-	int randomNumber = 0;
-	int[] maxDmg = { 75, 75, 100, 150, 250 };
-	int[] minDmg = { 50, 50, 75, 125, 200 };
+	private Random r = new Random();
+	private Handler handler;
+	private SpriteSheet spriteSheet;
+	private Sound sound;
+	private int randomNumber = 0;
+	private int[] maxDmg = { 75, 75, 100, 150, 250 };
+	private int[] minDmg = { 50, 50, 75, 125, 200 };
 	private int timeKeep = 0;
 	// Images for each animation
 	private BufferedImage[] walkImg = new BufferedImage[4];
@@ -94,6 +95,9 @@ public class Berserker extends GameObject {
 			return new Rectangle(x + 20, y, 32, 64);
 	}
 
+	/*
+	 * This Method does all Collision Detecting and does Damage part
+	 */
 	public void collision() {
 		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject tempObject = handler.object.get(i);
