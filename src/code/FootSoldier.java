@@ -93,12 +93,14 @@ public class FootSoldier extends GameObject {
 		return new Rectangle(x, y, 32, 64);
 	}
 
+	/*
+	 * This Method does all Collision Detecting and does Damage part
+	 */
 	public void collision() {
 		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject tempObject = handler.object.get(i);
 			if (timeKeep >= 10) {
 				animation = walk;
-				
 				if (this.getId() == ID.PlayerFootSolder) {
 					this.setVelX(2);
 					if (tempObject.getId() == ID.EnemyFootSolder) {

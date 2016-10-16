@@ -14,35 +14,26 @@ public class Animation {
 	private List<Frame> frames = new ArrayList<Frame>(); // Arraylist of frames
 
 	public Animation(BufferedImage[] frames, int frameDelay) {
-		this.frameDelay = frameDelay;
-		this.stopped = false;
-		for (int i = 0; i < frames.length; i++) {
-			addFrame(frames[i], frameDelay);
+		this.frameDelay = frameDelay; // Set Delay
+		this.stopped = false; // Is Stop NO.
+		for (int i = 0; i < frames.length; i++) { // To Add Images to frames array
+			addFrame(frames[i]);
 		}
-		this.frameCount = 0;
-		this.frameDelay = frameDelay;
-		this.currentFrame = 0;
-		this.totalFrames = this.frames.size();
+		this.frameCount = 0; // Frame Count
+		this.currentFrame = 0; // Current Frame
+		this.totalFrames = this.frames.size(); // Give TotalFrame the Total Frame Size.
 	}
 
-	private void addFrame(BufferedImage frame, int duration) {
-		frames.add(new Frame(frame, duration));
+	private void addFrame(BufferedImage frame) { // Add Frame From Image.
+		frames.add(new Frame(frame));
 		currentFrame = 0;
 	}
 
-	public BufferedImage getSprite() {
+	public BufferedImage getSprite() { // Get Current Frame.
 		return frames.get(currentFrame).getFrame();
 	}
 
-	public void restart() {
-		if (frames.size() == 0) {
-			return;
-		}
-		stopped = false;
-		currentFrame = 0;
-	}
-
-	public void tick() {
+	public void tick() { // Frame Cycle.
 		if (!stopped) {
 			frameCount++;
 			if (frameCount > frameDelay) {

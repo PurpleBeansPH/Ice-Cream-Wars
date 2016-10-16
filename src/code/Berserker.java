@@ -94,6 +94,9 @@ public class Berserker extends GameObject {
 			return new Rectangle(x + 20, y, 32, 64);
 	}
 
+	/*
+	 * This Method does all Collision Detecting and does Damage part
+	 */
 	public void collision() {
 		for (int i = 0; i < handler.object.size(); i++) {
 			GameObject tempObject = handler.object.get(i);
