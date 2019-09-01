@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_simple_game_test" default="compile.module.simple_game_test">
+  <dirname property="module.simple_game_test.basedir" file="${ant.file.module_simple_game_test}"/>
+  
+  <property name="module.jdk.home.simple_game_test" value="${jdk.home.1.8}"/>
+  <property name="module.jdk.bin.simple_game_test" value="${jdk.bin.1.8}"/>
+  <property name="module.jdk.classpath.simple_game_test" value="jdk.classpath.1.8"/>
+  
+  <property name="compiler.args.simple_game_test" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="simple_game_test.output.dir" value="${module.simple_game_test.basedir}/bin"/>
+  <property name="simple_game_test.testoutput.dir" value="${module.simple_game_test.basedir}/bin"/>
+  
+  <path id="simple_game_test.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="simple_game_test.module.production.classpath">
+    <path refid="${module.jdk.classpath.simple_game_test}"/>
+  </path>
+  
+  <path id="simple_game_test.runtime.production.module.classpath">
+    <pathelement location="${simple_game_test.output.dir}"/>
+  </path>
+  
+  <path id="simple_game_test.module.classpath">
+    <pathelement location="${simple_game_test.output.dir}"/>
+    <path refid="${module.jdk.classpath.simple_game_test}"/>
+  </path>
+  
+  <path id="simple_game_test.runtime.module.classpath">
+    <pathelement location="${simple_game_test.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.simple_game_test">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.simple_game_test">
+    <patternset refid="excluded.from.module.simple_game_test"/>
+  </patternset>
+  
+  <path id="simple_game_test.module.sourcepath">
+    <dirset dir="${module.simple_game_test.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.simple_game_test" depends="compile.module.simple_game_test.production,compile.module.simple_game_test.tests" description="Compile module Simple Game test"/>
+  
+  <target name="compile.module.simple_game_test.production" depends="register.custom.compilers" description="Compile module Simple Game test; production classes">
+    <mkdir dir="${simple_game_test.output.dir}"/>
+    <javac2 destdir="${simple_game_test.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.simple_game_test}/javac">
+      <compilerarg line="${compiler.args.simple_game_test}"/>
+      <bootclasspath refid="simple_game_test.module.bootclasspath"/>
+      <classpath refid="simple_game_test.module.production.classpath"/>
+      <src refid="simple_game_test.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.simple_game_test"/>
+    </javac2>
+    
+    <copy todir="${simple_game_test.output.dir}">
+      <fileset dir="${module.simple_game_test.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.simple_game_test.tests" depends="register.custom.compilers,compile.module.simple_game_test.production" description="compile module Simple Game test; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.simple_game_test" description="cleanup module">
+    <delete dir="${simple_game_test.output.dir}"/>
+    <delete dir="${simple_game_test.testoutput.dir}"/>
+  </target>
+</project>
