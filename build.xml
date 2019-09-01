@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="simple_game_test" default="all">
+<project name="ice-cream-wars" default="all">
   
   
   <property file="build.properties"/>
@@ -99,91 +99,91 @@
   <!-- Modules -->
   
   
-  <!-- Module Simple Game test -->
+  <!-- Module Ice-Cream-Wars -->
   
-  <dirname property="module.simple_game_test.basedir" file="${ant.file}"/>
+  <dirname property="module.ice-cream-wars.basedir" file="${ant.file}"/>
   
   
-  <property name="module.jdk.home.simple_game_test" value="${jdk.home.1.8}"/>
-  <property name="module.jdk.bin.simple_game_test" value="${jdk.bin.1.8}"/>
-  <property name="module.jdk.classpath.simple_game_test" value="jdk.classpath.1.8"/>
+  <property name="module.jdk.home.ice-cream-wars" value="${jdk.home.1.8}"/>
+  <property name="module.jdk.bin.ice-cream-wars" value="${jdk.bin.1.8}"/>
+  <property name="module.jdk.classpath.ice-cream-wars" value="jdk.classpath.1.8"/>
   
-  <property name="compiler.args.simple_game_test" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  <property name="compiler.args.ice-cream-wars" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
   
-  <property name="simple_game_test.output.dir" value="${module.simple_game_test.basedir}/bin"/>
-  <property name="simple_game_test.testoutput.dir" value="${module.simple_game_test.basedir}/bin"/>
+  <property name="ice-cream-wars.output.dir" value="${module.ice-cream-wars.basedir}/bin"/>
+  <property name="ice-cream-wars.testoutput.dir" value="${module.ice-cream-wars.basedir}/bin"/>
   
-  <path id="simple_game_test.module.bootclasspath">
+  <path id="ice-cream-wars.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
   </path>
   
-  <path id="simple_game_test.module.production.classpath">
-    <path refid="${module.jdk.classpath.simple_game_test}"/>
+  <path id="ice-cream-wars.module.production.classpath">
+    <path refid="${module.jdk.classpath.ice-cream-wars}"/>
   </path>
   
-  <path id="simple_game_test.runtime.production.module.classpath">
-    <pathelement location="${simple_game_test.output.dir}"/>
+  <path id="ice-cream-wars.runtime.production.module.classpath">
+    <pathelement location="${ice-cream-wars.output.dir}"/>
   </path>
   
-  <path id="simple_game_test.module.classpath">
-    <pathelement location="${simple_game_test.output.dir}"/>
-    <path refid="${module.jdk.classpath.simple_game_test}"/>
+  <path id="ice-cream-wars.module.classpath">
+    <pathelement location="${ice-cream-wars.output.dir}"/>
+    <path refid="${module.jdk.classpath.ice-cream-wars}"/>
   </path>
   
-  <path id="simple_game_test.runtime.module.classpath">
-    <pathelement location="${simple_game_test.output.dir}"/>
+  <path id="ice-cream-wars.runtime.module.classpath">
+    <pathelement location="${ice-cream-wars.output.dir}"/>
   </path>
   
   
-  <patternset id="excluded.from.module.simple_game_test">
+  <patternset id="excluded.from.module.ice-cream-wars">
     <patternset refid="ignored.files"/>
   </patternset>
   
-  <patternset id="excluded.from.compilation.simple_game_test">
-    <patternset refid="excluded.from.module.simple_game_test"/>
+  <patternset id="excluded.from.compilation.ice-cream-wars">
+    <patternset refid="excluded.from.module.ice-cream-wars"/>
   </patternset>
   
-  <path id="simple_game_test.module.sourcepath">
-    <dirset dir="${module.simple_game_test.basedir}">
+  <path id="ice-cream-wars.module.sourcepath">
+    <dirset dir="${module.ice-cream-wars.basedir}">
       <include name="src"/>
     </dirset>
   </path>
   
   
-  <target name="compile.module.simple_game_test" depends="compile.module.simple_game_test.production,compile.module.simple_game_test.tests" description="Compile module Simple Game test"/>
+  <target name="compile.module.ice-cream-wars" depends="compile.module.ice-cream-wars.production,compile.module.ice-cream-wars.tests" description="Compile module Ice-Cream-Wars"/>
   
-  <target name="compile.module.simple_game_test.production" depends="register.custom.compilers" description="Compile module Simple Game test; production classes">
-    <mkdir dir="${simple_game_test.output.dir}"/>
-    <javac2 destdir="${simple_game_test.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.simple_game_test}/javac">
-      <compilerarg line="${compiler.args.simple_game_test}"/>
-      <bootclasspath refid="simple_game_test.module.bootclasspath"/>
-      <classpath refid="simple_game_test.module.production.classpath"/>
-      <src refid="simple_game_test.module.sourcepath"/>
-      <patternset refid="excluded.from.compilation.simple_game_test"/>
+  <target name="compile.module.ice-cream-wars.production" depends="register.custom.compilers" description="Compile module Ice-Cream-Wars; production classes">
+    <mkdir dir="${ice-cream-wars.output.dir}"/>
+    <javac2 destdir="${ice-cream-wars.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ice-cream-wars}/javac">
+      <compilerarg line="${compiler.args.ice-cream-wars}"/>
+      <bootclasspath refid="ice-cream-wars.module.bootclasspath"/>
+      <classpath refid="ice-cream-wars.module.production.classpath"/>
+      <src refid="ice-cream-wars.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ice-cream-wars"/>
     </javac2>
     
-    <copy todir="${simple_game_test.output.dir}">
-      <fileset dir="${module.simple_game_test.basedir}/src">
+    <copy todir="${ice-cream-wars.output.dir}">
+      <fileset dir="${module.ice-cream-wars.basedir}/src">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
     </copy>
   </target>
   
-  <target name="compile.module.simple_game_test.tests" depends="register.custom.compilers,compile.module.simple_game_test.production" description="compile module Simple Game test; test classes" unless="skip.tests"/>
+  <target name="compile.module.ice-cream-wars.tests" depends="register.custom.compilers,compile.module.ice-cream-wars.production" description="compile module Ice-Cream-Wars; test classes" unless="skip.tests"/>
   
-  <target name="clean.module.simple_game_test" description="cleanup module">
-    <delete dir="${simple_game_test.output.dir}"/>
-    <delete dir="${simple_game_test.testoutput.dir}"/>
+  <target name="clean.module.ice-cream-wars" description="cleanup module">
+    <delete dir="${ice-cream-wars.output.dir}"/>
+    <delete dir="${ice-cream-wars.testoutput.dir}"/>
   </target>
   
   <target name="init" description="Build initialization">
     <!-- Perform any build initialization in this target -->
   </target>
   
-  <target name="clean" depends="clean.module.simple_game_test" description="cleanup all"/>
+  <target name="clean" depends="clean.module.ice-cream-wars" description="cleanup all"/>
   
-  <target name="build.modules" depends="init, clean, compile.module.simple_game_test" description="build all modules"/>
+  <target name="build.modules" depends="init, clean, compile.module.ice-cream-wars" description="build all modules"/>
   
   <target name="all" depends="build.modules" description="build all"/>
 </project>
